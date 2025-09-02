@@ -136,7 +136,7 @@ const Home = () => {
                 </button>
                 
                 <button
-                  onClick={() => fetchWeatherByCity({ name: 'New York' })}
+                  onClick={() => fetchWeatherByCity({ name: 'NewYork' })}
                   className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg transition-colors duration-200 font-medium"
                 >
                   🏙️ New York
