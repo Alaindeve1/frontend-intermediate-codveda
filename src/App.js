@@ -36,7 +36,7 @@ const Layout = ({ children }) => {
               </a>
             </p>
             <p className="text-xs text-blue-200 mt-2">
-              Built with React • Powered by Modern Web Technologies
+              developed and designed by Ndizeye Alain
             </p>
           </div>
         </div>
