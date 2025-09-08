@@ -12,7 +12,7 @@ import Home from './pages/Home';
 import Forecast from './pages/Forecast';
 import Favorites from './pages/Favorites';
 
-// Main App Layout
+
 const Layout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600">
