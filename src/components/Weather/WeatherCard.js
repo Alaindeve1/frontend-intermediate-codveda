@@ -65,8 +65,8 @@ const WeatherCard = ({ weather, showDetails = true }) => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
           <img
-            src={getWeatherIcon(weather.weather[0].icon, '4x')}
-            alt={weather.weather[0].description}
+            src={getWeatherIcon(weather.weather?.[0]?.icon || '01d', '4x')}
+            alt={weather.weather?.[0]?.description || 'Weather icon'}
             className="w-20 h-20"
           />
           <div>
@@ -74,7 +74,7 @@ const WeatherCard = ({ weather, showDetails = true }) => {
               {formatTemperature(weather.main.temp, state.temperatureUnit)}
             </div>
             <p className="text-blue-100">
-              {capitalizeWords(weather.weather[0].description)}
+              {capitalizeWords(weather.weather?.[0]?.description || 'N/A')}
             </p>
           </div>
         </div>
