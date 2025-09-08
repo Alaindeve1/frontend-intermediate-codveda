@@ -81,8 +81,12 @@ export const formatTemperature = (temp, unit) => {
   
   // Filter forecast data to get daily forecasts
   export const getDailyForecast = (forecastData) => {
+    if (!forecastData || !Array.isArray(forecastData.list)) {
+      return [];
+    }
+
     const daily = {};
-    
+
     forecastData.list.forEach(item => {
       const date = new Date(item.dt * 1000).toDateString();
       if (!daily[date]) {
@@ -92,7 +96,7 @@ export const formatTemperature = (temp, unit) => {
             min: item.main.temp_min,
             max: item.main.temp_max
           },
-          weather: item.weather[0],
+          weather: (item.weather && item.weather.length > 0 ? item.weather[0] : { description: 'N/A', icon: '01d' }),
           humidity: item.main.humidity,
           windSpeed: item.wind.speed
         };
