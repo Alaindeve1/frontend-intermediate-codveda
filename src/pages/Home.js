@@ -164,7 +164,7 @@ const Home = () => {
             <div className="text-center text-white py-12">
               <div className="text-6xl mb-4">🌤️</div>
               <h3 className="text-2xl font-semibold mb-2">Welcome to WeatherDash</h3>
-              <p className="text-blue-100 mb-6">Search for a city to see current weather conditions anf for forecast</p>
+              <p className="text-blue-100 mb-6">Search for a city to see current weather conditions and the 5-day forecast</p>
               <button
                 onClick={getCurrentLocationWeather}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg transition-colors duration-200 font-medium"
