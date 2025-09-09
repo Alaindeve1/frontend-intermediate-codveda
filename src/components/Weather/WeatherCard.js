@@ -17,6 +17,10 @@ const WeatherCard = ({ weather, showDetails = true }) => {
 
   if (!weather) return null;
 
+  const firstCondition = Array.isArray(weather.weather) && weather.weather.length > 0
+    ? weather.weather[0]
+    : null;
+
   const isFav = actions.isFavorite(weather.name);
 
   const toggleFavorite = () => {
@@ -65,8 +69,8 @@ const WeatherCard = ({ weather, showDetails = true }) => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
           <img
-            src={getWeatherIcon(weather.weather?.[0]?.icon || '01d', '4x')}
-            alt={weather.weather?.[0]?.description || 'Weather icon'}
+            src={getWeatherIcon(firstCondition?.icon || '01d', '4x')}
+            alt={firstCondition?.description || 'Weather icon'}
             className="w-20 h-20"
           />
           <div>
@@ -74,7 +78,7 @@ const WeatherCard = ({ weather, showDetails = true }) => {
               {formatTemperature(weather.main.temp, state.temperatureUnit)}
             </div>
             <p className="text-blue-100">
-              {capitalizeWords(weather.weather?.[0]?.description || 'N/A')}
+              {capitalizeWords(firstCondition?.description || 'N/A')}
             </p>
           </div>
         </div>
