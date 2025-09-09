@@ -70,7 +70,7 @@ const Forecast = () => {
 
   // Load forecast data on mount
   useEffect(() => {
-    if (state.currentWeather) {
+    if (state.currentWeather && state.currentWeather.coord) {
       // If we already have current weather, fetch forecast for the same location
       fetchForecastByCity({
         lat: state.currentWeather.coord.lat,
@@ -86,7 +86,7 @@ const Forecast = () => {
 
   // Refetch forecast when temperature unit changes
   useEffect(() => {
-    if (state.currentWeather) {
+    if (state.currentWeather && state.currentWeather.coord) {
       fetchForecastByCity({
         lat: state.currentWeather.coord.lat,
         lon: state.currentWeather.coord.lon
@@ -96,7 +96,7 @@ const Forecast = () => {
 
   // Retry function
   const handleRetry = () => {
-    if (state.currentWeather) {
+    if (state.currentWeather && state.currentWeather.coord) {
       fetchForecastByCity({
         lat: state.currentWeather.coord.lat,
         lon: state.currentWeather.coord.lon

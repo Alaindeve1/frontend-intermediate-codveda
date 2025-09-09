@@ -70,7 +70,7 @@ const Home = () => {
 
   // Refetch weather when temperature unit changes
   useEffect(() => {
-    if (state.currentWeather) {
+    if (state.currentWeather && state.currentWeather.coord) {
       fetchWeatherByCity({
         lat: state.currentWeather.coord.lat,
         lon: state.currentWeather.coord.lon
@@ -80,7 +80,7 @@ const Home = () => {
 
   // Retry function for error cases
   const handleRetry = () => {
-    if (state.currentWeather) {
+    if (state.currentWeather && state.currentWeather.coord) {
       fetchWeatherByCity({
         lat: state.currentWeather.coord.lat,
         lon: state.currentWeather.coord.lon

@@ -89,8 +89,8 @@ export function WeatherProvider({ children }) {
         id: Date.now(),
         name: city.name,
         country: city.country,
-        lat: city.coord.lat,
-        lon: city.coord.lon
+        lat: city.coord?.lat || 0,
+        lon: city.coord?.lon || 0
       };
       dispatch({ type: ACTIONS.ADD_TO_FAVORITES, payload: favoriteCity });
     },
