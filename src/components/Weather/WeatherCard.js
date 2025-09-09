@@ -75,7 +75,7 @@ const WeatherCard = ({ weather, showDetails = true }) => {
           />
           <div>
             <div className="text-4xl font-bold text-white mb-1">
-              {formatTemperature(weather.main.temp, state.temperatureUnit)}
+              {formatTemperature(weather.main?.temp || 0, state.temperatureUnit)}
             </div>
             <p className="text-blue-100">
               {capitalizeWords(firstCondition?.description || 'N/A')}
@@ -87,7 +87,7 @@ const WeatherCard = ({ weather, showDetails = true }) => {
         <div className="text-right">
           <p className="text-blue-100 text-sm">Feels like</p>
           <p className="text-xl font-semibold text-white">
-            {formatTemperature(weather.main.feels_like, state.temperatureUnit)}
+            {formatTemperature(weather.main?.feels_like || 0, state.temperatureUnit)}
           </p>
         </div>
       </div>
@@ -98,7 +98,7 @@ const WeatherCard = ({ weather, showDetails = true }) => {
           {/* Humidity */}
           <div className="bg-white bg-opacity-10 rounded-lg p-3 text-center">
             <div className="text-2xl mb-1">💧</div>
-            <p className="text-white font-semibold">{formatHumidity(weather.main.humidity)}</p>
+            <p className="text-white font-semibold">{formatHumidity(weather.main?.humidity || 0)}</p>
             <p className="text-blue-100 text-sm">Humidity</p>
           </div>
 
@@ -116,7 +116,7 @@ const WeatherCard = ({ weather, showDetails = true }) => {
           {/* Pressure */}
           <div className="bg-white bg-opacity-10 rounded-lg p-3 text-center">
             <div className="text-2xl mb-1">⏲️</div>
-            <p className="text-white font-semibold">{formatPressure(weather.main.pressure)}</p>
+            <p className="text-white font-semibold">{formatPressure(weather.main?.pressure || 0)}</p>
             <p className="text-blue-100 text-sm">Pressure</p>
           </div>
 
