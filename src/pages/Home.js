@@ -1,5 +1,5 @@
 // src/pages/Home.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useWeather } from '../context/WeatherContext';
 import { weatherService } from '../services/weatherAPI';
 import SearchBar from '../components/Weather/SearchBar';
@@ -11,7 +11,7 @@ const Home = () => {
   const { state, actions } = useWeather();
 
   // Function to fetch weather by city
-  const fetchWeatherByCity = async (city) => {
+  const fetchWeatherByCity = useCallback(async (city) => {
     actions.setLoading(true);
     actions.clearError();
 
@@ -35,10 +35,10 @@ const Home = () => {
     } catch (error) {
       actions.setError(error.message);
     }
-  };
+  }, [actions, state.temperatureUnit]);
 
   // Function to get user's location weather
-  const getCurrentLocationWeather = async () => {
+  const getCurrentLocationWeather = useCallback(async () => {
     actions.setLoading(true);
     actions.clearError();
 
@@ -48,7 +48,7 @@ const Home = () => {
     } catch (error) {
       actions.setError(error.message);
     }
-  };
+  }, [actions, state.temperatureUnit]);
 
   // Make getCurrentLocationWeather available globally for header button
   useEffect(() => {
@@ -56,7 +56,7 @@ const Home = () => {
     return () => {
       delete window.getCurrentLocation;
     };
-  }, [state.temperatureUnit]);
+  }, [getCurrentLocationWeather, state.temperatureUnit]);
 
   // Load default city weather on mount
   useEffect(() => {
@@ -66,7 +66,7 @@ const Home = () => {
         fetchWeatherByCity({ name: 'London' });
       });
     }
-  }, []);
+  }, [fetchWeatherByCity, getCurrentLocationWeather, state.currentWeather]);
 
   // Refetch weather when temperature unit changes
   useEffect(() => {
@@ -76,7 +76,7 @@ const Home = () => {
         lon: state.currentWeather.coord.lon
       });
     }
-  }, [state.temperatureUnit]);
+  }, [fetchWeatherByCity, state.currentWeather, state.temperatureUnit]);
 
   // Retry function for error cases
   const handleRetry = () => {

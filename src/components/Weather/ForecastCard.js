@@ -64,7 +64,7 @@ const ForecastCard = ({ forecast, isToday = false }) => {
 
 // Horizontal forecast list component
 export const ForecastList = ({ forecastData }) => {
-  const { state } = useWeather();
+  // state not needed here
 
   if (!forecastData || !forecastData.length) {
     return (

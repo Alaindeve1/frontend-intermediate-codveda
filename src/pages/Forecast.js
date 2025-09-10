@@ -1,5 +1,5 @@
 // src/pages/Forecast.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useWeather } from '../context/WeatherContext';
 import { weatherService } from '../services/weatherAPI';
 import { getDailyForecast } from '../utils/helpers';
@@ -13,7 +13,7 @@ const Forecast = () => {
   const { state, actions } = useWeather();
 
   // Function to fetch forecast by city
-  const fetchForecastByCity = async (city) => {
+  const fetchForecastByCity = useCallback(async (city) => {
     actions.setLoading(true);
     actions.clearError();
 
@@ -42,10 +42,10 @@ const Forecast = () => {
     } catch (error) {
       actions.setError(error.message);
     }
-  };
+  }, [actions, state.temperatureUnit]);
 
   // Function to get user's location forecast
-  const getCurrentLocationForecast = async () => {
+  const getCurrentLocationForecast = useCallback(async () => {
     actions.setLoading(true);
     actions.clearError();
 
@@ -66,7 +66,7 @@ const Forecast = () => {
     } catch (error) {
       actions.setError(error.message);
     }
-  };
+  }, [actions, state.temperatureUnit]);
 
   // Load forecast data on mount
   useEffect(() => {
@@ -82,7 +82,7 @@ const Forecast = () => {
         fetchForecastByCity({ name: 'London' });
       });
     }
-  }, []);
+  }, [fetchForecastByCity, getCurrentLocationForecast, state.currentWeather]);
 
   // Refetch forecast when temperature unit changes
   useEffect(() => {
@@ -92,7 +92,7 @@ const Forecast = () => {
         lon: state.currentWeather.coord.lon
       });
     }
-  }, [state.temperatureUnit]);
+  }, [fetchForecastByCity, state.currentWeather, state.temperatureUnit]);
 
   // Retry function
   const handleRetry = () => {

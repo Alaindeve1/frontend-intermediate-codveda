@@ -1,5 +1,5 @@
 // src/pages/Favorites.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useWeather } from '../context/WeatherContext';
 import { weatherService } from '../services/weatherAPI';
 import SearchBar from '../components/Weather/SearchBar';
@@ -14,7 +14,7 @@ const Favorites = () => {
   const [favoriteErrors, setFavoriteErrors] = useState({});
 
   // Function to add city to favorites
-  const addCityToFavorites = async (city) => {
+  const addCityToFavorites = useCallback(async (city) => {
     try {
       let weather;
       if (city.lat && city.lon) {
@@ -37,10 +37,10 @@ const Favorites = () => {
     } catch (error) {
       actions.setError(`Failed to add ${city.name} to favorites: ${error.message}`);
     }
-  };
+  }, [actions, state.temperatureUnit]);
 
   // Function to fetch weather for all favorite cities
-  const fetchFavoritesWeather = async () => {
+  const fetchFavoritesWeather = useCallback(async () => {
     if (state.favorites.length === 0) return;
 
     setLoadingFavorites(true);
@@ -58,8 +58,7 @@ const Favorites = () => {
         return { 
           id: favorite.id, 
           weather: null, 
-          error: error.message,
-          favorite 
+          error: error.message
         };
       }
     });
@@ -87,12 +86,12 @@ const Favorites = () => {
     } finally {
       setLoadingFavorites(false);
     }
-  };
+  }, [state.favorites, state.temperatureUnit]);
 
   // Load favorites weather on mount and when favorites change
   useEffect(() => {
     fetchFavoritesWeather();
-  }, [state.favorites, state.temperatureUnit]);
+  }, [fetchFavoritesWeather]);
 
   // Function to remove favorite with confirmation
   const handleRemoveFavorite = (cityId, cityName) => {
