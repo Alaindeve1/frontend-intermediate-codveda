@@ -1,8 +1,9 @@
 // src/services/weatherAPI.js
 import axios from 'axios';
 
-const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-const BASE_URL = process.env.REACT_APP_WEATHER_BASE_URL;
+// Read envs with safe fallbacks for production builds
+const API_KEY = process.env.REACT_APP_WEATHER_API_KEY || '';
+const BASE_URL = process.env.REACT_APP_WEATHER_BASE_URL || 'https://api.openweathermap.org/data/2.5';
 
 // Create axios instance
 const weatherAPI = axios.create({
@@ -12,11 +13,28 @@ const weatherAPI = axios.create({
   }
 });
 
+// Interceptor to guard against misconfigured deployments returning HTML
+weatherAPI.interceptors.response.use(
+  (response) => {
+    // If Vercel serves an HTML error page, axios may still resolve with data as a string
+    if (typeof response.data === 'string') {
+      throw new Error('Unexpected response format from weather API');
+    }
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // API service functions
 export const weatherService = {
   // Get current weather by city name
   getCurrentWeather: async (city, units = 'metric') => {
     try {
+      if (!API_KEY) {
+        throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
+      }
       const response = await weatherAPI.get('/weather', {
         params: {
           q: city,
@@ -32,6 +50,9 @@ export const weatherService = {
   // Get current weather by coordinates
   getCurrentWeatherByCoords: async (lat, lon, units = 'metric') => {
     try {
+      if (!API_KEY) {
+        throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
+      }
       const response = await weatherAPI.get('/weather', {
         params: {
           lat,
@@ -48,6 +69,9 @@ export const weatherService = {
   // Get 5-day forecast
   getForecast: async (city, units = 'metric') => {
     try {
+      if (!API_KEY) {
+        throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
+      }
       const response = await weatherAPI.get('/forecast', {
         params: {
           q: city,
@@ -63,6 +87,9 @@ export const weatherService = {
   // Get forecast by coordinates
   getForecastByCoords: async (lat, lon, units = 'metric') => {
     try {
+      if (!API_KEY) {
+        throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
+      }
       const response = await weatherAPI.get('/forecast', {
         params: {
           lat,
@@ -79,6 +106,9 @@ export const weatherService = {
   // Search cities (using geocoding API)
   searchCities: async (query) => {
     try {
+      if (!API_KEY) {
+        throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
+      }
       const response = await axios.get(
         `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${API_KEY}`
       );

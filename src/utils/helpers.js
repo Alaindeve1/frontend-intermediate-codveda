@@ -9,7 +9,9 @@ export const formatTemperature = (temp, unit) => {
   
   // Format date
   export const formatDate = (timestamp) => {
+    if (!timestamp && timestamp !== 0) return 'N/A';
     const date = new Date(timestamp * 1000);
+    if (isNaN(date.getTime())) return 'N/A';
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -19,7 +21,9 @@ export const formatTemperature = (temp, unit) => {
   
   // Format time
   export const formatTime = (timestamp) => {
+    if (!timestamp && timestamp !== 0) return 'N/A';
     const date = new Date(timestamp * 1000);
+    if (isNaN(date.getTime())) return 'N/A';
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit'
