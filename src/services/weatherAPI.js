@@ -17,9 +17,16 @@ export const weatherService = {
   // Get current weather by city name
   getCurrentWeather: async (city, units = 'metric') => {
     try {
+      // Handle common city names that might be missing spaces
+      const formattedCity = city.trim()
+        .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space between camelCase
+        .replace(/([a-z])(\d+)/g, '$1 $2')   // Add space between letters and numbers
+        .replace(/\s+/g, ' ')                // Replace multiple spaces with single space
+        .trim();
+
       const response = await weatherAPI.get('/weather', {
         params: {
-          q: encodeURIComponent(city.trim()),
+          q: formattedCity,
           units,
           appid: API_KEY
         }
@@ -49,10 +56,18 @@ export const weatherService = {
   // Get 5-day forecast
   getForecast: async (city, units = 'metric') => {
     try {
+      // Use the same city formatting as in getCurrentWeather
+      const formattedCity = city.trim()
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/([a-z])(\d+)/g, '$1 $2')
+        .replace(/\s+/g, ' ')
+        .trim();
+
       const response = await weatherAPI.get('/forecast', {
         params: {
-          q: city,
-          units
+          q: formattedCity,
+          units,
+          appid: API_KEY
         }
       });
       return response.data;
