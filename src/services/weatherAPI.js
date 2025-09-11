@@ -1,8 +1,7 @@
 // src/services/weatherAPI.js
 import axios from 'axios';
 
-// Read envs with safe fallbacks for production builds
-const API_KEY = process.env.REACT_APP_WEATHER_API_KEY || '';
+const API_KEY = process.env.REACT_APP_WEATHER_API_KEY || 'c76099d16ce07d922dbab02e4a38cdd7';
 const BASE_URL = process.env.REACT_APP_WEATHER_BASE_URL || 'https://api.openweathermap.org/data/2.5';
 
 // Create axios instance
@@ -16,7 +15,6 @@ const weatherAPI = axios.create({
 // Interceptor to guard against misconfigured deployments returning HTML
 weatherAPI.interceptors.response.use(
   (response) => {
-    // If Vercel serves an HTML error page, axios may still resolve with data as a string
     if (typeof response.data === 'string') {
       throw new Error('Unexpected response format from weather API');
     }
@@ -27,6 +25,15 @@ weatherAPI.interceptors.response.use(
   }
 );
 
+// Format city name helper function
+const formatCityName = (city) => {
+  return city.trim()
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/([a-z])(\d+)/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 // API service functions
 export const weatherService = {
   // Get current weather by city name
@@ -35,10 +42,12 @@ export const weatherService = {
       if (!API_KEY) {
         throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
       }
+      const formattedCity = formatCityName(city);
       const response = await weatherAPI.get('/weather', {
         params: {
-          q: city,
-          units
+          q: formattedCity,
+          units,
+          appid: API_KEY
         }
       });
       return response.data;
@@ -57,7 +66,8 @@ export const weatherService = {
         params: {
           lat,
           lon,
-          units
+          units,
+          appid: API_KEY
         }
       });
       return response.data;
@@ -72,10 +82,12 @@ export const weatherService = {
       if (!API_KEY) {
         throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
       }
+      const formattedCity = formatCityName(city);
       const response = await weatherAPI.get('/forecast', {
         params: {
-          q: city,
-          units
+          q: formattedCity,
+          units,
+          appid: API_KEY
         }
       });
       return response.data;
@@ -94,7 +106,8 @@ export const weatherService = {
         params: {
           lat,
           lon,
-          units
+          units,
+          appid: API_KEY
         }
       });
       return response.data;
@@ -110,7 +123,7 @@ export const weatherService = {
         throw new Error('Missing API key. Configure REACT_APP_WEATHER_API_KEY');
       }
       const response = await axios.get(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${API_KEY}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${API_KEY}`
       );
       return response.data;
     } catch (error) {
